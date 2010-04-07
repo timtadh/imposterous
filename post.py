@@ -1,4 +1,7 @@
 import sendmail
 import markdown
 
-sendmail.mail("post@posterous.com", raw_input("subject: "), markdown.markdownFromFile(raw_input("file: ")))
+sub = raw_input("subject: ")
+text = open(raw_input("file: "), "r").read()
+
+sendmail.mail("post@posterous.com", sub, text, markdown.markdown(text).replace('<br>', ''))

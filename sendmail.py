@@ -9,15 +9,24 @@ from email.MIMEAudio import MIMEAudio
 from email.MIMEImage import MIMEImage
 from email.Encoders import encode_base64
 
-def mail(to, subject, text, *attachments):
+def mail(to, subject, text, html, *attachments):
     user = 'tim.tadh@gmail.com'
     pswd = getpass.getpass("pass: ")
 
-    msg = MIMEMultipart()
+    msg = MIMEMultipart('related')
     msg['From'] = user
     msg['To'] = to
     msg['Subject'] = subject
-    msg.attach(MIMEText(text))
+    msg.preamble = 'This is a multi-part message in MIME format.'
+
+    alt = MIMEMultipart('alternative')
+    msg.attach(alt)
+
+    msgtext = MIMEText(text)
+    alt.attach(msgtext)
+
+    msgtext = MIMEText(html, 'html')
+    alt.attach(msgtext)
 
     for path in attachments:
         msg.attach(make_attach(path))
@@ -61,4 +70,4 @@ def make_attach(path):
     return attachment
 
 if __name__ == "__main__":
-    mail("tim.tadh@gmail.com", "hello", "some text")
+    mail("tim.tadh@gmail.com", "hello", "some text", "<h1>some text</h1>")

@@ -1,6 +1,7 @@
 import os
 import smtplib
 import mimetypes
+import getpass
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
 from email.MIMEText import MIMEText
@@ -10,7 +11,7 @@ from email.Encoders import encode_base64
 
 def mail(to, subject, text, *attachments):
     user = 'tim.tadh@gmail.com'
-    pswd = raw_input("pass: ")
+    pswd = getpass.getpass("pass: ")
 
     msg = MIMEMultipart()
     msg['From'] = user
@@ -29,7 +30,7 @@ def mail(to, subject, text, *attachments):
     mailServer.sendmail(user, to, msg.as_string())
     mailServer.close()
 
-    print('Sent email to %s' % recipient)
+    print('Sent email to %s' % to)
 
 def make_attach(path):
     contentType, encoding = mimetypes.guess_type(path)
@@ -59,4 +60,5 @@ def make_attach(path):
     attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(path))
     return attachment
 
-mail("tim.tadh@gmail.com", "hello", "some text", "/home/hendersont/Desktop/Regex_Tim_Henderson_3-31-2010.mp3")
+if __name__ == "__main__":
+    mail("tim.tadh@gmail.com", "hello", "some text")

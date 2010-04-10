@@ -78,4 +78,5 @@ def make_attach(path):
     return attachment
 
 if __name__ == "__main__":
+    #smtplib.SMTP.debuglevel =12
     mail("tim.tadh@gmail.com", "tim.tadh@gmail.com", "hello", "some text", "<h1>some text</h1>")

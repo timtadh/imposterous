@@ -13,5 +13,5 @@ while attach == 'y':
 
 print "attachments", attachments
 
-sendmail.mail(user, "post@posterous.com", sub, text,
+sendmail.mail(user, "tim.tadh@gmail.com", sub, text,
               markdown.markdown(text).replace('<br>', ''), *attachments)

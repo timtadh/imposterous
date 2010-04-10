@@ -9,8 +9,7 @@ from email.MIMEAudio import MIMEAudio
 from email.MIMEImage import MIMEImage
 from email.Encoders import encode_base64
 
-def mail(to, subject, text, html, *attachments):
-    user = 'tim.tadh@gmail.com'
+def mail(user, to, subject, text, html, *attachments):
     pswd = getpass.getpass("pass: ")
 
     msg = MIMEMultipart('related')
@@ -35,13 +34,21 @@ def mail(to, subject, text, html, *attachments):
     mailServer.ehlo()
     mailServer.starttls()
     mailServer.ehlo()
-    mailServer.login(user, pswd)
+    login = False
+    while not login:
+        try:
+            mailServer.login(user, pswd)
+            login = True
+        except smtplib.SMTPAuthenticationError, e:
+            print "password rejected", user, pswd, e
+            pswd = getpass.getpass("pass: ")
     mailServer.sendmail(user, to, msg.as_string())
     mailServer.close()
 
     print('Sent email to %s' % to)
 
 def make_attach(path):
+    path = os.path.abspath(path)
     contentType, encoding = mimetypes.guess_type(path)
 
     if contentType is None or encoding is not None:
@@ -58,6 +65,7 @@ def make_attach(path):
         attachment = email.message_from_string(bytes)
     elif main_type == 'image':
         attachment = MIMEImage(bytes, sub_type)
+        attachment.add_header('Content-ID', ''.join(('<', os.path.basename(path), '>')))
     elif main_type == 'audio':
         print sub_type
         attachment = MIMEAudio(bytes, sub_type)
@@ -70,4 +78,4 @@ def make_attach(path):
     return attachment
 
 if __name__ == "__main__":
-    mail("tim.tadh@gmail.com", "hello", "some text", "<h1>some text</h1>")
+    mail("tim.tadh@gmail.com", "tim.tadh@gmail.com", "hello", "some text", "<h1>some text</h1>")

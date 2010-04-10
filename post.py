@@ -1,6 +1,7 @@
 import sendmail
 import markdown
 
+user = raw_input("user: ")
 sub = raw_input("subject: ")
 text = open(raw_input("file: "), "r").read()
 
@@ -12,5 +13,5 @@ while attach == 'y':
 
 print "attachments", attachments
 
-sendmail.mail("tim.tadh", "tim.tadh@gmail.com", sub, text,
+sendmail.mail(user, "post@posterous.com", sub, text,
               markdown.markdown(text).replace('<br>', ''), *attachments)
